@@ -32,6 +32,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
+
+import org.joml.Vector2d;
+
 /**
  * Represents a maze in the game of Pacman. Mazes are responsible for keeping
  * track of the state of the tiles, the entities in the maze, and the number of
@@ -163,6 +167,31 @@ public class Maze implements Disposable {
         }
         throw new IllegalStateException("Pacman not found in maze");
     }
+
+
+public Tile getClosestPellet() {
+    PacmanEntity pacman = getPacman();
+    Vector2d pacmanPosition = pacman.getPosition();
+    Tile closestPelletTile = null;
+    double closestDistance = Double.MAX_VALUE;
+
+    for (Tile[] row : tiles) {
+        for (Tile tile : row) {
+            if (tile.getState() == TileState.PELLET || tile.getState() == TileState.POWER_PELLET) {
+                Vector2d pelletPosition = new Vector2d(tile.getPosition()).mul(TILE_SIZE);
+                double distance = pacmanPosition.distance(pelletPosition);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestPelletTile = tile;
+                }
+            }
+        }
+    }
+    
+    return closestPelletTile;
+}
+
 
     public void addParticle(@NotNull Particle particle) {
         particles.add(particle);
